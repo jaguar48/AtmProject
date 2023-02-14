@@ -207,6 +207,7 @@ namespace BusinessLogic.Implementation
                         Console.WriteLine("Source account not found");
                         break;
                     }
+                    customer.CustomerID = (int)reader["CustomerID"];
                     customer.Balance = (decimal)(reader["Balance"]);
                     customer.Name = (string)(reader["FirstName"]);
 
@@ -242,7 +243,7 @@ namespace BusinessLogic.Implementation
                 cm2.Parameters.AddWithValue("@amount", amount);
                 cm2.Parameters.AddWithValue("@destinationAccountNumber", destinationAccountNumber);
 
-
+                savetransaction.CustomerID = customer.CustomerID;
                 savetransaction.Name = customer.Name;
                 savetransaction.Amount = amount;
                 savetransaction.TransactionDate = DateTime.Now;
@@ -262,10 +263,10 @@ namespace BusinessLogic.Implementation
 
 
 
-                    await using SqlCommand command = new SqlCommand("INSERT INTO Transactions (CName, Amount, TransactionDate, TransactionType)" +
-                       " VALUES (@name, @amount, @transactionDate, @transactionType)", sqlConn);
+                    await using SqlCommand command = new SqlCommand("INSERT INTO Transactions (CustomerID, CName, Amount, TransactionDate, TransactionType) VALUES (@customerID, @name, @amount, @transactionDate, @transactionType)", sqlConn);
 
-                    /*command.Parameters.AddWithValue("@customerId", transaction.CustomerId);*/
+
+                    command.Parameters.AddWithValue("@customerID", customer.CustomerID);
                     command.Parameters.AddWithValue("@name", savetransaction.Name);
                     command.Parameters.AddWithValue("@amount", savetransaction.Amount);
                     command.Parameters.AddWithValue("@transactionDate", savetransaction.TransactionDate);

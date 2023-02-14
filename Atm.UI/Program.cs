@@ -11,13 +11,13 @@ namespace MutliAtm
         static async Task Main(string[] args)
         {
 
-            /* using (Atmdb myatm = new Atmdb(new Atmservice()))
-             {
-                 await myatm.CreateTable();
+            /*using (Atmdb myatm = new Atmdb(new Atmservice()))
+            {
+                await myatm.CreateTable();
 
 
 
-             }*/
+            }*/
 
             /*   using (IBankOperation bankOperation = new BankOperations(new Atmservice()))
                {
