@@ -11,37 +11,37 @@ namespace MutliAtm
         static async Task Main(string[] args)
         {
 
-            /*using (Atmdb myatm = new Atmdb(new Atmservice()))
+            /* using (Atmdb myatm = new Atmdb(new Atmservice()))
+             {
+                 await myatm.CreateTable();
+
+
+
+             }*/
+
+            using (IBankOperation bankOperation = new BankOperations(new Atmservice()))
             {
-                await myatm.CreateTable();
+
+
+                var customercreate = new CustomerViewModel("bishop");
+
+
+                var createdcustomer = await bankOperation.CreateCustomer(customercreate);
+
+
+                Console.WriteLine(createdcustomer);
+
+
+                Console.WriteLine("balance: " + customercreate.Balance + "account:" + customercreate.AccountNumber + "Pin:" + customercreate.Pin);
 
 
 
-            }*/
-
-            /*   using (IBankOperation bankOperation = new BankOperations(new Atmservice()))
-               {
-
-
-                   var customercreate = new CustomerViewModel("okonkwo");
-
-
-                   var createdcustomer = await bankOperation.CreateCustomer(customercreate);
-
-
-                   Console.WriteLine(createdcustomer);
-
-
-                   Console.WriteLine("balance: " + customercreate.Balance + "account:" + customercreate.AccountNumber + "Pin:" + customercreate.Pin );
-
-
-
-               };*/
+            };
 
 
 
 
-            using ILoginAccountInterface loginAccountInterface = new CustomerLogin(new Atmservice());
+            /*using ILoginAccountInterface loginAccountInterface = new CustomerLogin(new Atmservice());
 
             var customer = await loginAccountInterface.Authenticate();
             if (!loginAccountInterface.IsAuthenticated)
@@ -104,7 +104,7 @@ namespace MutliAtm
                             return;
                     }
                 }
-            };
+            };*/
         }
 
     }

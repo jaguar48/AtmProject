@@ -17,7 +17,7 @@ namespace DataBoard.Database
             private bool _disposed;
 
             private SqlConnection _dbConnection = null;
-            public Atmservice() : this(@"Data Source=.;Initial Catalog=AtmDBApp;Integrated Security=True;Encrypt=False;TrustServerCertificate=False;")
+            public Atmservice() : this(@"Data Source=.;Initial Catalog=MyAtmDB;Integrated Security=True;Encrypt=False;TrustServerCertificate=False;")
             {
 
             }

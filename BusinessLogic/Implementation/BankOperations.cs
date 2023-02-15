@@ -329,8 +329,6 @@ namespace BusinessLogic.Implementation
           }*/
 
 
-
-
         protected virtual void Dispose(bool disposing)
         {
 
