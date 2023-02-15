@@ -7,7 +7,7 @@ This is a C# project that contains the implementation of the IBankOperation inte
    * Withdraw an amount from a customer's account
 
    * Check the balance of a customer's account
-   Transfer an amount from a customer's account to another customer's account
+   * Transfer an amount from a customer's account to another customer's account
 
 The project uses a CustomerViewModel class to represent customer data and a TransactionViewModel class to represent transaction data. 
 
@@ -23,35 +23,30 @@ To install the Microsoft.Data.SqlClient package, run the following command in th
 
 ```Install-Package Microsoft.Data.SqlClient```
 
+
+
 ## Usage
 
 To use this project, you can create an instance of the BankOperations class, passing an instance of the Atmservice class as a parameter. Then, you can call the methods of the IBankOperation interface to perform the desired operations.
 
 ## Creating a new customer
 
-To create a new customer, call the CreateCustomer method, passing a CustomerViewModel object with the customer's data as a parameter. The method returns a Task<string> that represents the result of the operation.
-
+To login as new customer, use the below pin details.
 ```csharp
 
-var customer = new CustomerViewModel {
-    Name = "John Doe",
-    AccountNumber = 123456789,
-    Pin = 1234,
-    Balance = 1000
-};
-
-var result = await bankOperations.CreateCustomer(customer);
-
-Console.WriteLine(result);
+2222
+3333
+4444
+55555
 ```
 
 ## Withdrawing an amount from a customer's account
 
-To withdraw an amount from a customer's account, call the Withdraw method, passing the account number as a parameter. The method prompts the user to enter the amount to withdraw and returns a Task<CustomerViewModel> that represents the updated customer data.
+To withdraw an amount from a customer's account, The method prompts the user to enter the amount to withdraw and returns a Task<CustomerViewModel> that represents the updated customer data.
 
 ```csharp
 
-var customer = await bankOperations.Withdraw(123456789);
+var customer = await bankOperations.Withdraw(customer.AccountNumber);
 
 Console.WriteLine($"Customer balance: {customer.Balance}");
 ```
@@ -62,7 +57,7 @@ To check the balance of a customer's account, call the GetBalance method, passin
 
 ```csharp
 
-var balance = await bankOperations.GetBalance(123456789);
+var balance = await bankOperations.GetBalance(customer.AccountNumber);
 
 
 Console.WriteLine($"Customer balance: {balance}");
@@ -74,7 +69,7 @@ To transfer an amount from a customer's account to another customer's account, c
 
 ```csharp
 
-await bankOperations.Transfer(123456789, 987654321);
+await bankOperations.Transfer(customer.SourceAccount,DestinationAccount);
 ```
 
 License
