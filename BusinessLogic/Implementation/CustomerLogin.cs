@@ -5,7 +5,7 @@ using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
 using System;
 
-namespace BusinessLogic.Accounts
+namespace ATM.BLL.Implementation
 {
     public class CustomerLogin : ILoginAccountInterface, IDisposable
     {

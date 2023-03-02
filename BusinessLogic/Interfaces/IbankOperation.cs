@@ -1,7 +1,6 @@
-﻿using DataBoard;
-using DataBoard.ViewModel;
-using System.Threading.Tasks;
+﻿using DataBoard.ViewModel;
 using System;
+using System.Threading.Tasks;
 
 namespace BusinessLogic.Interfaces
 {
@@ -9,7 +8,7 @@ namespace BusinessLogic.Interfaces
     {
         Task<string> CreateCustomer(CustomerViewModel customer);
 
-        /* void Deposit(double amount);*/
+
         Task<CustomerViewModel> Withdraw(int accountNumber);
         Task<decimal> GetBalance(int Account);
         Task Transfer(int sourceAccountNumber, int destinationAccountNumber);

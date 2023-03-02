@@ -1,5 +1,4 @@
 ﻿
-using DataBoard.Enum;
 using System;
 
 namespace DataBoard.ViewModel
@@ -16,3 +15,4 @@ namespace DataBoard.ViewModel
 
 
 }
+

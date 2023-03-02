@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
-using BusinessLogic.Interfaces;
+﻿using BusinessLogic.Interfaces;
 using DataBoard.Database;
-using DataBoard.Enum;
-using DataBoard.Model;
 using DataBoard.ViewModel;
 using Microsoft.Data.SqlClient;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BusinessLogic.Implementation
 {
@@ -35,36 +28,26 @@ namespace BusinessLogic.Implementation
             {
                 var sqlConn = await _dbContext.OpenConnection();
 
-                if (!string.IsNullOrWhiteSpace(customer.Name) && customer.AccountNumber > 0 && customer.Pin > 0 && customer.Balance >= 0)
+                if (string.IsNullOrWhiteSpace(customer.Name) || customer.AccountNumber <= 0 || customer.Pin <= 0 || customer.Balance < 0 || customer.Pin.ToString().Length != 4)
                 {
-                    if (customer.Pin.ToString().Length == 4)
-                    {
-
-                        SqlCommand cm = new SqlCommand($"INSERT INTO Customer(FirstName, AccountNumber, Pin, Balance) VALUES('{customer.Name}'," +
-                                        $"{customer.AccountNumber},{customer.Pin},{customer.Balance} )", sqlConn);
-                        await cm.ExecuteNonQueryAsync();
-
-
-                        return "Customer created successfully";
-                    }
-                    else
-                    {
-                        Console.WriteLine("Pin must have exactly 4 digits");
-                        return "error";
-                    }
-                }
-                else
-                {
-
                     return "One or more of the customer properties are null or have an invalid value.";
                 }
+
+                SqlCommand cm = new SqlCommand($"INSERT INTO Customer(FirstName, AccountNumber, Pin, Balance) VALUES('{customer.Name}'," +
+                    $"{customer.AccountNumber},{customer.Pin},{customer.Balance} )", sqlConn);
+
+                await cm.ExecuteNonQueryAsync();
+
+                return "Customer created successfully";
+
             }
             catch (Exception ex)
             {
-
                 return $"something went wrong {ex}";
             }
         }
+        
+
 
 
 
@@ -300,33 +283,44 @@ namespace BusinessLogic.Implementation
             }
 
         }
+        public async Task<List<TransactionViewModel>> TransactionViewHistory(int ID)
+        {
+            var transactions = new List<TransactionViewModel>();
+            var sqlConn = await _dbContext.OpenConnection();
 
+            try
+            {
+                await using var cmd = new SqlCommand($"SELECT * FROM Transactions WHERE CustomerID = @accountNumber", sqlConn);
+                cmd.Parameters.AddWithValue("@accountNumber", ID);
 
-        /*  private static void ViewTransactionHistory()
-          {
-              using (SqlCommand command = new SqlCommand("SELECT * FROM Transactions WHERE AccountNumber = @accountNumber", _connection))
-              {
-                  command.Parameters.AddWithValue("@accountNumber", _accountNumber);
+                await using var reader = await cmd.ExecuteReaderAsync();
 
-                  using (SqlDataReader reader = command.ExecuteReader())
-                  {
-                      if (!reader.HasRows)
-                      {
-                          Console.WriteLine("No transactions found.");
-                          return;
-                      }
+                while (await reader.ReadAsync())
+                {
+                    var transaction = new TransactionViewModel
+                    {
 
-                      while (reader.Read())
-                      {
-                          Console.WriteLine("Transaction ID: " + reader["TransactionId"]);
-                          Console.WriteLine("Type: " + reader["TransactionType"]);
-                          Console.WriteLine("Amount: " + reader["Amount"]);
-                          Console.WriteLine("Date: " + reader["Date"]);
-                          Console.WriteLine();
-                      }
-                  }
-              }
-          }*/
+                        CustomerID = (int)reader["CustomerID"],
+                        Name = (string)reader["CName"],
+                        Amount = (decimal)reader["Amount"],
+                        TransactionDate = (DateTime)reader["TransactionDate"],
+                        TransactionType = (string)reader["TransactionType"]
+                    };
+
+                    transactions.Add(transaction);
+                }
+
+                await reader.CloseAsync();
+                await sqlConn.CloseAsync();
+
+                return transactions;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while trying to retrieve transactions: {ex.Message}");
+                return null;
+            }
+        }
 
 
         protected virtual void Dispose(bool disposing)
